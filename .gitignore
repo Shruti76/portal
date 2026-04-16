@@ -1,0 +1,76 @@
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Production build
+/build
+/dist
+.next/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Uploads and backups
+uploads/
+backups/
+*.tar.gz
+*.zip
+
+# Database
+*.sql.bak
+pgdata/
+
+# Cache
+.cache/
+.eslintcache
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# Docker
+.dockerignore
+
+# Keep
+!uploads/.gitkeep
+!backups/.gitkeep

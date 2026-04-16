@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: developer_portal_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: developer_portal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: developer_portal_backend
+    ports:
+      - "5001:5001"
+    environment:
+      PORT: 5001
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: developer_portal
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: development_secret_key_change_in_production
+      JWT_EXPIRY: 24h
+      UPLOAD_DIR: ./uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: developer_portal_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5001/api
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
